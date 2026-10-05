@@ -1,12 +1,12 @@
 {
   "name": "ostack",
   "version": "0.15.10",
-  "description": "pstack for OpenCode \u2014 rigorous agent workflows, control-cli, control-ui, deslop, subagents, and playbooks",
+  "description": "pstack for OpenCode — rigorous agent workflows, control-cli, control-ui, deslop, subagents, and playbooks",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "ostack": "./bin/ostack.mjs"
+    "ostack": "bin/ostack.mjs"
   },
   "exports": {
     ".": {
