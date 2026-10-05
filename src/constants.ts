@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 export const PACKAGE_NAME = "ostack";
 export const MANIFEST_FILE = ".ostack-manifest.json";
-export const DEFAULT_REPO = process.env.OSTACK_REPO || "param/ostack";
+export const DEFAULT_REPO = process.env.OSTACK_REPO || "paramcodes/ostack";
 
 export function getPackageVersion(): string {
   try {

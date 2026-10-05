@@ -102,7 +102,7 @@ Or target your GitHub repository directly:
 
 ```json
 {
-  "plugins": ["github:param/ostack"]
+  "plugins": ["github:paramcodes/ostack"]
 }
 ```
 

@@ -1,7 +1,7 @@
 {
   "name": "ostack",
   "version": "0.15.10",
-  "description": "pstack for OpenCode — rigorous agent workflows, control-cli, control-ui, deslop, subagents, and playbooks",
+  "description": "pstack for OpenCode \u2014 rigorous agent workflows, control-cli, control-ui, deslop, subagents, and playbooks",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -39,7 +39,7 @@
     "control-ui",
     "deslop"
   ],
-  "author": "param",
+  "author": "Param (https://github.com/paramcodes)",
   "license": "MIT",
   "dependencies": {
     "@opencode/plugin": "^2.0.23",
@@ -48,5 +48,13 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "typescript": "^5.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paramcodes/ostack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paramcodes/ostack/issues"
+  },
+  "homepage": "https://github.com/paramcodes/ostack#readme"
 }
