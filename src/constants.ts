@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const PACKAGE_NAME = "ostack";
+export const PACKAGE_NAME = "@param-ship/ostack";
 export const MANIFEST_FILE = ".ostack-manifest.json";
 export const DEFAULT_REPO = process.env.OSTACK_REPO || "paramcodes/ostack";
 

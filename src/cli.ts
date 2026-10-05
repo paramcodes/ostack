@@ -9,7 +9,7 @@ import type { InstallOptions, UpdateOptions } from "./types.js";
 function printHelp(): void {
   const v = getPackageVersion();
   console.log(`
-ostack v${v} — pstack for OpenCode
+@param-ship/ostack v${v} — pstack for OpenCode
 
 USAGE
   ostack <command> [flags]
@@ -37,22 +37,22 @@ FLAGS
 
 EXAMPLES
   # Install globally to OpenCode (interactive or non-interactive)
-  npx ostack install -g
+  npx @param-ship/ostack install -g
 
   # Install to project .opencode directory
-  npx ostack install -p
+  npx @param-ship/ostack install -p
 
   # Install and set poteto-mode as default agent
-  npx ostack install -g --default-agent
+  npx @param-ship/ostack install -g --default-agent
 
   # Update to latest GitHub release
-  npx ostack update
+  npx @param-ship/ostack update
 
   # Verify health of installed skills and links
-  npx ostack verify -g
+  npx @param-ship/ostack verify -g
 
   # Cleanly remove
-  npx ostack remove -g
+  npx @param-ship/ostack remove -g
 `);
 }
 

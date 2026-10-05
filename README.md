@@ -1,61 +1,101 @@
-# ostack
+# @param-ship/ostack
 
 > **pstack** for [OpenCode](https://opencode.ai) — rigorous agent workflows, control skills, subagents, and playbooks.
 
-`ostack` ports Lauren Tan's [`cursor/plugins/pstack`](https://github.com/cursor/plugins/tree/main/pstack) workflow to the latest OpenCode (v2.0+) and works just like `npx skills`: install globally or to a project with one command, keep it verified, and auto-update to new tagged releases.
+[![npm version](https://img.shields.io/npm/v/@param-ship/ostack.svg)](https://www.npmjs.com/package/@param-ship/ostack)
+[![license](https://img.shields.io/github/license/paramcodes/ostack.svg)](LICENSE)
+
+`@param-ship/ostack` ports Lauren Tan's [`cursor/plugins/pstack`](https://github.com/cursor/plugins/tree/main/pstack) workflow to the latest OpenCode (v2.0+) and works just like `npx skills`: install globally or to a project with one command, keep it verified, and auto-update to new tagged releases.
 
 ---
 
 ## Quick Start
 
-### Install
+### 1. Installation
 
 Install globally to your OpenCode configuration (`~/.config/opencode`):
 
 ```bash
-npx ostack install -g
+npx @param-ship/ostack install -g
 ```
 
-Or install locally to your current repository (`.opencode/`):
+Or install locally into the current project (`.opencode/`):
 
 ```bash
-npx ostack install -p
+npx @param-ship/ostack install -p
 ```
 
-To also configure `poteto-mode` as your default OpenCode primary agent:
+To set `poteto-mode` as your default primary agent in `opencode.json`:
 
 ```bash
-npx ostack install -g --default-agent
+npx @param-ship/ostack install -g --default-agent
 ```
 
-### Update
+---
 
-Check for and install updates (syncs from latest tagged releases on GitHub, or from the latest npm package):
+### 2. Auto-Updating
+
+Check for and install updates. This automatically checks the latest tagged release from GitHub or the latest published package:
 
 ```bash
-npx ostack update
+npx @param-ship/ostack update
 ```
 
-### Verify
-
-Run health checks on your installation (validates skills, frontmatter, markdown links, permissions):
+You can also target an explicit release tag:
 
 ```bash
-npx ostack verify -g
+npx @param-ship/ostack update --tag v0.15.10
 ```
 
-### List Installed Components
+---
+
+### 3. Verification
+
+Run self-diagnostics on your OpenCode installation (validates all skill frontmatters, kebab-case IDs, relative markdown links, and agent permissions):
 
 ```bash
-npx ostack list -g
+npx @param-ship/ostack verify -g
 ```
 
-### Clean Uninstall
+---
 
-Cleanly remove only the files installed and tracked by ostack:
+### 4. List Components
+
+List all installed skills, agents, commands, and version metadata:
 
 ```bash
-npx ostack remove -g
+npx @param-ship/ostack list -g
+```
+
+---
+
+### 5. Clean Uninstall
+
+Cleanly remove only the files tracked by ostack:
+
+```bash
+npx @param-ship/ostack remove -g
+```
+
+---
+
+## Using as an OpenCode Plugin
+
+In addition to CLI installation, `@param-ship/ostack` is a full OpenCode 2.0 plugin!
+
+Add it to your `~/.config/opencode/opencode.json` (or project `.opencode/opencode.json`):
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": ["@param-ship/ostack"]
+}
+```
+
+Or install via OpenCode CLI:
+
+```bash
+opencode plugin add @param-ship/ostack
 ```
 
 ---
@@ -83,61 +123,30 @@ npx ostack remove -g
 ### 4. Scripts & Playbooks
 - All 23 playbooks (`feature`, `bug-fix`, `perf-issue`, `hillclimb`, `investigation`, `refactoring`, `prototype`, `runtime-forensics`, `trace-forensics`, `opening-a-pr`, `babysit`, `autonomous-run`, etc.).
 - Native OpenCode session queries (`session-last-touch.mjs`).
-- Clean test suite passing under Bun (`bun test`).
+- Complete test suite (`bun test`) with 61 tests passing.
 
 ---
 
-## Dual Mode: CLI or OpenCode Plugin
+## Contributing & Releases
 
-In addition to running via `npx ostack`, `ostack` is a full OpenCode 2.0 plugin! You can add it directly to `opencode.json`:
+To push updates:
 
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "plugins": ["ostack"]
-}
-```
-
-Or target your GitHub repository directly:
-
-```json
-{
-  "plugins": ["github:paramcodes/ostack"]
-}
-```
-
----
-
-## Publishing to Your Own Repo
-
-When you're ready to publish:
-
-1. Create a repository on GitHub (e.g. `ostack`).
-2. Add your remote and push:
-   ```bash
-   git remote add origin git@github.com:<your-username>/ostack.git
-   git add .
-   git commit -m "feat: initial ostack release for opencode v2"
-   git push -u origin main
-   ```
-3. Tag a release:
-   ```bash
-   git tag v0.15.10
-   git push origin v0.15.10
-   ```
-4. (Optional) Publish to npm:
-   ```bash
-   npm publish
-   ```
-
-Users can now install and update with:
 ```bash
-npx ostack install -g
-npx ostack update
+# 1. Commit changes
+git add .
+git commit -m "feat: new skills or improvements"
+git push origin main
+
+# 2. Tag a release
+git tag v0.15.11
+git push origin v0.15.11
+
+# 3. Publish to npm
+npm publish --access public
 ```
 
 ---
 
 ## License
 
-MIT © Lauren Tan, OpenCode Port by Param
+MIT © Lauren Tan, OpenCode Port by [Param](https://github.com/paramcodes)
