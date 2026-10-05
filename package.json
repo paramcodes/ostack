@@ -1,0 +1,52 @@
+{
+  "name": "ostack",
+  "version": "0.15.10",
+  "description": "pstack for OpenCode — rigorous agent workflows, control-cli, control-ui, deslop, subagents, and playbooks",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "ostack": "./bin/ostack.mjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "content",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun run tools/build.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "verify": "bun run ./bin/ostack.mjs verify"
+  },
+  "keywords": [
+    "opencode",
+    "pstack",
+    "poteto-mode",
+    "skills",
+    "agents",
+    "workflows",
+    "control-cli",
+    "control-ui",
+    "deslop"
+  ],
+  "author": "param",
+  "license": "MIT",
+  "dependencies": {
+    "@opencode/plugin": "^2.0.23",
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
