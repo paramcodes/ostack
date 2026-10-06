@@ -1,74 +1,88 @@
 ---
 name: setup-pstack
-description: Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
+description: Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes pstack-models.json, which overrides the skill defaults. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
 ---
 
 # Setup pstack
 
-Write `~/.opencode/rules/pstack-models.mdc`, an always-applied rule that sets pstack's model per role.
+Write `~/.config/opencode/pstack-models.json`, a config file that sets pstack's model per role. This skill is invoked only via `/setup-pstack` or an explicit user request.
 
 ## Steps
 
 ### 1. Detect available models
 
-Enumerate the model slugs you can pass to a `Task` subagent in this session. That is the dependable source. If Cursor also exposes a models API or CLI that lists the user's entitled models, prefer it for completeness. If you cannot detect any, ask the user to paste the slugs they have access to. Never write a real slug you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid even though they are not detected slugs.
+Run `opencode models` and treat its output as the catalog of real model IDs. That list is the dependable source. Never write a real slug you have not seen there. The aliases `inherit-parent` and `auto` are always valid even though they are not detected slugs; both mean "omit `model`, run on the parent chat model".
+
+If the command is unavailable or returns nothing, ask the user to paste their model IDs. Do not fall back to remembered or assumed slugs.
+
+A note to keep in mind: the detected catalog on this machine is a single provider family (`opencode/*`), so any panel of "diverse models" collapses to near-identical candidates until more models are added.
 
 ### 2. Load current state
 
-The default role-to-model mapping is the rule shape shown in step 5 below. If `~/.opencode/rules/pstack-models.mdc` already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `how critics`, is from a retired role. Drop it.
+The default role-to-model mapping is the shape shown in step 5 below. If `~/.config/opencode/pstack-models.json` already exists, read it and treat its `budget` field and its `roles` values as the current choices. Otherwise start from those defaults. A key that is not in step 5, such as `how critics`, is from a retired role. Drop it.
+
+Preserve any role the user overrode: on a re-run, a role you did not ask about keeps its recorded value.
 
 ### 3. Budget, map, and confirm
 
-**(a) Ask for a budget.** Prefer AskQuestion over free text. Offer these four options with these exact labels, and name the current budget when the rule records one.
+**(a) Ask for a budget.** Prefer the harness's structured question tool over free text. Offer these four options with these exact labels, and name the current budget when the file records one.
 
 - `unlimited — keep max`
 - `large — xhigh reasoning`
 - `medium — high reasoning`
 - `small — medium reasoning`
 
-**(b) Apply it.** Build the working table from the skill defaults, and on a re-run keep any role you changed by family, list, or alias (`inherit-parent`, `auto`). `unlimited` leaves every effort as in that table. `large`, `medium`, and `small` set the effort token of every real slug, panel entries included, to `xhigh`, `high`, or `medium`. The effort token is the last token, or the one before a trailing `fast`, on the ladder `max` > `xhigh` > `high` > `medium` > `low`. If the result is not a detected slug, use the same family's detected slug with the highest effort at or below the target, else mark the role as needing a choice. `inherit-parent` and `auto` do not change. So `small` turns `claude-opus-5-5-max` into `claude-opus-5-5-medium`, and `grok-4.7-xhigh-fast` into `grok-4.7-medium-fast`.
+**(b) Apply it.** Record the chosen label; it is advisory metadata, not a slug transform. Upstream rewrote every real slug's trailing effort token on the ladder `max` > `xhigh` > `high` > `medium` > `low`. Those suffixed variants do not exist in the `opencode/*` catalog, so this port does not do that arithmetic and never fabricates a suffixed slug. Instead:
 
-**(c) Show the roles and confirm.** Show every role with its model, marking any real slug not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model, which is how Auto users stay on Auto) as the options. Prefer AskQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model family differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+- Record the budget label in the `budget` field.
+- If the user asks for a specific effort variant and it is not present in the detected catalog, say so plainly and keep the slug unchanged.
+
+`inherit-parent` and `auto` never change.
+
+**(c) Show the roles and confirm.** Show every role with its model, marking any real slug not in the detected set as needing a choice. Also list each key step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` and `auto` as the options. Prefer the structured question tool over free text.
+
+Panel roles (`arena runners`, `architect runners`, `interrogate reviewers`, `arena cross-judge pool`) hold arrays. One subagent runs per array entry, alias entries included, so the array length sets the fan-out count. `arena cross-judge pool` is a candidate pool from which Arena selects one value whose family differs from the parent's when possible. With a single-family catalog that selection usually cannot differentiate, so expect the pool to behave as a plain list.
 
 ### 4. Validate
 
-Every real slug written must be in the detected set. `inherit-parent` and `auto` always pass. If a chosen real slug is not available, stop and ask again.
+Every real slug written must appear in the detected `opencode models` output. `inherit-parent` and `auto` always pass. If a chosen real slug is not available, stop and ask again. Also validate the shape: `version` is `1`, `budget` is the chosen label, and every key in `roles` is one of the step 5 keys, with panels as arrays and single roles as scalars.
 
-### 5. Write the rule
+### 5. Write the config
 
-Write `~/.opencode/rules/pstack-models.mdc` with `alwaysApply: true`, a `# budget` line with the chosen label and its target effort, and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:
+Write `~/.config/opencode/pstack-models.json`. Overwrite the whole file so re-runs stay idempotent, preserving every role the user has overridden. Shape:
 
+```json
+{
+  "version": 1,
+  "budget": "unlimited",
+  "roles": {
+    "feature, refactoring": "inherit-parent",
+    "bug-fix": "inherit-parent",
+    "perf-issue": "inherit-parent",
+    "hillclimb": "inherit-parent",
+    "judgment and prose": "inherit-parent",
+    "hardest tasks": "inherit-parent",
+    "how explorer": "inherit-parent",
+    "how explainer": "inherit-parent",
+    "why investigators": "inherit-parent",
+    "why synthesizer": "inherit-parent",
+    "reflect tooling": "inherit-parent",
+    "reflect judgment, divergent, synthesizer": "inherit-parent",
+    "arena runners": ["inherit-parent", "inherit-parent", "inherit-parent"],
+    "arena cross-judge pool": ["inherit-parent", "inherit-parent", "inherit-parent"],
+    "swarm workers": "inherit-parent",
+    "architect runners": ["inherit-parent", "inherit-parent", "inherit-parent"],
+    "interrogate reviewers": ["inherit-parent", "inherit-parent", "inherit-parent"]
+  }
+}
 ```
----
-description: pstack per-role model choices (overrides skill defaults)
-alwaysApply: true
----
-# pstack model configuration. One line per role. Delete a line to fall back to the skill default.
-# `inherit-parent` or `auto` as a value: the role runs on the parent chat model (omit Task `model`). Alias entries in a panel list still count toward its fan-out.
-# budget: unlimited (max)
-feature, refactoring: grok-4.7-xhigh-fast
-bug-fix: grok-4.7-xhigh-fast
-perf-issue: grok-4.7-xhigh-fast
-hillclimb: grok-4.7-xhigh-fast
-judgment and prose: claude-opus-5-5-max
-hardest tasks: claude-opus-5-5-max
-how explorer: grok-4.7-xhigh-fast
-how explainer: claude-opus-5-5-max
-why investigators: grok-4.7-xhigh-fast
-why synthesizer: claude-opus-5-5-max
-reflect tooling: gpt-5.6-sol-max
-reflect judgment, divergent, synthesizer: claude-opus-5-5-max
-arena runners: claude-opus-5-5-max, gpt-5.6-sol-max, grok-4.7-xhigh-fast
-arena cross-judge pool: claude-opus-5-5-max, gpt-5.6-sol-max, grok-4.7-xhigh-fast
-swarm workers: grok-4.7-xhigh-fast
-architect runners: claude-opus-5-5-max, gpt-5.6-sol-max, grok-4.7-xhigh-fast
-interrogate reviewers: claude-opus-5-5-max, gpt-5.6-sol-max, grok-4.7-xhigh-fast
-```
+
+The `inherit-parent` defaults above are the shipped defaults here: the detected catalog is single-family `opencode/*`, so any concrete slug would be a guess. Replace them with real catalog IDs once the user picks some — `opencode models` lists what you can set.
 
 ### 6. Confirm
 
-Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it.
+Tell the user the file was written and which skills read it. Re-running this skill updates it.
 
 ### 7. Offer a verification skill (optional)
 
-Check whether the project has a way to drive the real app for proof (a `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /create-verification-skill." On yes, invoke `/create-verification-skill` (resolves wherever pstack is installed: workspace, user, or plugin). On no, move on without pushing.
+Check whether the project has a way to drive the real app for proof (a `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /create-verification-skill." On yes, invoke `/create-verification-skill` (resolves wherever pstack is installed: workspace or user). On no, move on without pushing.

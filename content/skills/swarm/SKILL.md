@@ -1,8 +1,9 @@
 ---
 name: swarm
 description: "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration."
-disable-model-invocation: true
 ---
+
+This skill is invoked only via `/swarm` or an explicit user request. Do not auto-trigger from the description alone.
 
 # Swarm
 
@@ -10,7 +11,7 @@ Fan out N parallel cloud workers. They may cover separate slices, race the same 
 
 ## Start
 
-Open a todolist with one entry per phase before launching anything.
+Write one line per phase into `todo.md` at the repository root before launching anything.
 
 1. Frame
 2. Fan out
@@ -22,12 +23,12 @@ Open a todolist with one entry per phase before launching anything.
 1. State the done predicate and the artifact or report the swarm must return.
 2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.
 3. Set N from the user or derive it from the shape. N is total workers, not the cloud concurrency limit.
-4. Pick the worker model from the `swarm workers` line in `~/.opencode/rules/pstack-models.mdc`. If the rule or that line is missing, use `grok-4.7-xhigh-fast`. For `auto` or `inherit-parent`, omit `model` so the workers run on the parent model. If the Task tool rejects a slug, use the default and say so. If it rejects the default, use the closest valid slug of the same family from its error message. For a model race, name each arm's model up front.
+4. Pick the worker model from the `swarm workers` line in `~/.config/opencode/pstack-models.json`. If the rule or that line is missing, use `grok-4.7-xhigh-fast`. For `auto` or `inherit-parent`, omit `model` so the workers run on the parent model. If the subagent tool rejects a slug, use the default and say so. If it rejects the default, use the closest valid slug of the same family from its error message. For a model race, name each arm's model up front.
 5. Give each worker its own writable output when it writes. When workers verify or measure commits, each brief names the exact SHAs. A measurement brief also names the method (sample count, what one sample is, order). The worker records both in its result.
 
 ## Phase B: Fan out
 
-Spawn all N workers in one message with `subagent_type: generalPurpose`, `environment: "cloud"`, `run_in_background: true`, and the step 4 model, left unset for `auto` or `inherit-parent`. Use `environment: "local"` only when the worker needs access to something on the user's computer.
+Spawn all N workers in one message as a background batch with `agent: general` and the step 4 model, left unset for `auto` or `inherit-parent`. This harness has no cloud or local environment split: every subagent runs on this machine, so a worker that needs local state already has it. Give each worker its own worktree or output directory so two never write one target.
 
 When a worker must start from a non-default pushed branch, pass `cloud_base_branch`.
 

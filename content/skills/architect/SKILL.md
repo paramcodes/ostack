@@ -1,8 +1,9 @@
 ---
 name: architect
 description: "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape."
-disable-model-invocation: true
 ---
+
+This skill is invoked only via `/architect` or an explicit user request. Do not auto-trigger from the description alone.
 
 # Architect
 
@@ -10,7 +11,7 @@ Design before implementing. Sketch types, function signatures, class shapes, and
 
 ## Start
 
-Open a todolist with one entry per phase before starting.
+Write one line per phase into `todo.md` at the repository root before starting.
 
 1. Ground
 2. Sketch
@@ -30,7 +31,7 @@ Skip Phase A only when the work is genuinely greenfield with no surrounding syst
 
 Run the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Each candidate produces a design package shaped per `references/rationale-template.md`.
 
-Take the runners from the `architect runners` line in the `pstack-models.mdc` rule, in place of the `arena runners` line. If the rule or that line is missing, use `claude-opus-5-5-max`, `gpt-5.6-sol-max`, `grok-4.7-xhigh-fast`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.
+Take the runners from the `architect runners` line in the `~/.config/opencode/pstack-models.json` file, in place of the `arena runners` line. If the rule or that line is missing, use `claude-opus-5-5-max`, `gpt-5.6-sol-max`, `grok-4.7-xhigh-fast`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.
 
 Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
 

@@ -61,7 +61,7 @@ Strong: `description: Remove slop from code and diffs as a separate cleanup pass
 - No secrets, no credentials, no private transcript content, no customer data. A skill is committed
   material.
 - No Cursor-only vocabulary: no `agent: "comment-sicko"`, no `environment: cloud`, no
-  `skill-authoring`, no `~/.opencode/`. On this harness the subagents are `poteto-agent`, `general`, and
+  `skill-authoring`, and never write to `~/.cursor/`. On this harness the subagents are `poteto-agent`, `general`, and
   `comment-sicko`; isolation is a local git worktree; there is no cloud environment.
 
 ## References

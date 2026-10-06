@@ -40,7 +40,7 @@ This machine's model catalog is currently a single provider family (`opencode/*`
 
 ## Start a task with `/poteto-mode`
 
-`/poteto-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. [Guide page 2](../poteto-mode/references/guide/02-poteto-mode.md) has examples.
+`/poteto-mode` matches the task to a playbook, copies the playbook's steps into `todo.md` at the repository root, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. [Guide page 2](../poteto-mode/references/guide/02-poteto-mode.md) has examples.
 
 `poteto-mode` is a primary agent, not a one-message skill. Switch to it with the agent switcher (Tab by default) and it stays in context for every turn of the session. Start it from a fresh session when you want it; a model change from `/setup-pstack` only takes effect in a new session.
 
@@ -99,7 +99,7 @@ Verification on this machine:
 - [`control-cli` and `control-ui`](../control-cli/SKILL.md) is the cross-project fallback for driving a surface when no project skill exists.
 - [`/maintain-verification-skill`](../maintain-verification-skill/SKILL.md) keeps a verification skill and its feature map honest as the app changes.
 
-Not in pstack upstream: `control-cli` and `control-ui` ship in the `cursor-team-kit` plugin. Use `verify-harness` and `create-verification-skill` instead. `/loop` and `/create-skill` are Cursor built-ins; use [`/pstack-loop`](../pstack-loop/SKILL.md) for bounded loops and [`/skill-authoring`](../skill-authoring/SKILL.md) to author a skill.
+Not in pstack upstream: `control-cli` and `control-ui` ship in the `cursor-team-kit` plugin, and both are vendored here so the links above resolve. `/loop` and `/create-skill` are Cursor built-ins; use [`/pstack-loop`](../pstack-loop/SKILL.md) for bounded loops and [`/skill-authoring`](../skill-authoring/SKILL.md) to author a skill.
 
 ## Playbooks and principles
 

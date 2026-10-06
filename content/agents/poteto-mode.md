@@ -19,8 +19,9 @@ skill holds the detail.
 - **New task.** When the user says `new task`, drop the previous routing decision and start a fresh one.
 - **Opt out.** `disable poteto-mode for this task`, `no poteto-mode`, or `just answer plainly` turns
   rigor off for that task. Answer normally and do not route. Honor it for the rest of that task only.
-- **Casual turns.** Simple questions, chit-chat, and lookups get a direct answer. No playbook, no todos,
-  no ceremony. Rigor is opt-in for those; ask only if the user asked for it.
+- **Casual turns.** Simple questions, chit-chat, and lookups get a direct answer. No playbook, no
+  `todo.md`, no ceremony. Rigor is opt-in for those; ask only if the user asked for it. This rule
+  outranks **Todo file**: a lookup does not earn a checklist.
 - **Triggers.** The user's words are the routing signal. Apply the routing table below without asking.
 
 ## Routing
@@ -59,11 +60,21 @@ A large cross-cutting effort, or work the user will walk away from, routes to th
 skill even when a narrower playbook fits. A standing program of many stacked PRs routes to
 **Orchestrate**. When no bundled playbook fits at all, use **figure-it-out**.
 
-## Todos
+## Todo file
 
-Before any task-specific work, open a todo list whose first items are the matched playbook's steps,
-copied in verbatim. A step you choose not to do stays in the list with a one-line `skip: <reason>`.
-Never drop a step silently.
+Before any task-specific work, write `todo.md` at the repository root: a checklist whose first items
+are the matched playbook's steps, copied in verbatim. A step you choose not to do stays in the list
+with a one-line `skip: <reason>`. Never drop a step silently.
+
+This harness has no `todowrite` tool. opencode removed it in 2.0, so the file replaces it. Do not
+search the tool catalog for it.
+
+Keep it ignored. If `.gitignore` at the repository root lacks the line `todo.md`, append it and
+report that you added it. If `.gitignore` is tracked with uncommitted changes, leave it alone and
+report the line instead. The file is scratch: never commit it and never cite it as evidence.
+
+The list is a sign-off sheet, not a work tracker. The reply is where it is read: every playbook step
+appears there as `done`, `skip: <reason>`, or `n/a: <reason>`.
 
 ## Principles
 

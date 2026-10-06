@@ -25,6 +25,6 @@ Give the agent a goal and a way to check it, in your own words:
 /poteto-mode the export writes duplicate rows when a retry lands mid-run. repro first, then fix and verify.
 ```
 
-You don't need to name a playbook or list skills. "repro first" and a checkable outcome are all the routing signal `/poteto-mode` needs. It matches the Bug fix playbook, copies the steps into a todo list, and calls the right skills as each step fires.
+You don't need to name a playbook or list skills. "repro first" and a checkable outcome are all the routing signal `/poteto-mode` needs. It matches the Bug fix playbook, copies the steps into `todo.md` at the repository root, and calls the right skills as each step fires.
 
 Next: [Set up pstack](./01-setup.md).

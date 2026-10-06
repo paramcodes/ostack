@@ -1,8 +1,9 @@
 ---
 name: recall
 description: "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work."
-disable-model-invocation: true
 ---
+
+This skill is invoked only via `/recall` or an explicit user request. Do not auto-trigger from the description alone.
 
 # Recall
 
@@ -12,7 +13,7 @@ Keep it tight and on-topic. Read only what the in-scope threads need, then stop.
 
 Your context lives in two records. Your own chat history holds what you did and decided. The shared record holds everything that happened around the same code under other names: the symptoms users keep reporting, the fixes that shipped and got reverted, the errors still firing in prod. That second record is what the **why** skill searches, across source control, the issue tracker, chat and issue channels, long-form docs, and error tracking. A feature with a long bug tail keeps most of its story there, so don't reconstruct it from your transcripts alone.
 
-Transcripts live at `~/.opencode/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl`, where `<slug>` is the workspace path with the leading slash dropped and each "/" turned into "-" (so `/Users/you/proj` becomes `Users-you-proj`). Every line is one chat message.
+Transcripts come from opencode itself: `opencode session list` enumerates sessions, `opencode session export <sessionID>` dumps one as JSON. Scope the list to the active workspace and its recency, and export only those. Never export another project's sessions without being asked — those are unrelated private chats. Sessions are stored under `~/.local/share/opencode/` (a SQLite db, `opencode.db`); treat that as an implementation detail, not something to read directly. Order candidates by real modification time from `session list`, never by ID.
 
 1. Classify, then route. One specific prior chat to resume is the `session-pickup` playbook, not this. Turning habits into a durable skill is `automate-me`. A human-readable summary of your work is a different task. Recall loads working context across recent chats before you act. If the user already gave you a full state capsule (paths, branch, the change), use it and skip the mining.
 2. Lock the scope before searching. Pin the window ("recent" is a real range, default the last 7 days), the topic if named, and the workspace (default the active one. Never read another project's transcripts without being asked). State the scope back. Never quietly turn "all" into "recent N".

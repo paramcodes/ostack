@@ -15,8 +15,10 @@ only the principles whose leaf you actually read.
 
 If the task you were handed names a playbook under
 `~/.config/opencode/skills/poteto-mode/playbooks/`, open that playbook and follow its steps in order,
-copying them into your todo list verbatim. A step you skip stays in the list with a one-line
-`skip: <reason>`.
+copying them into `todo.md` at the repository root verbatim. This harness has no `todowrite` tool; opencode removed it in 2.0, so the file replaces it. Keep `todo.md` out of git, appending the line
+`todo.md` to `.gitignore` when that line is missing. A step you skip stays in the list with a
+one-line `skip: <reason>`, and every step appears in your reply as `done`, `skip: <reason>`, or
+`n/a: <reason>`.
 
 Rules that carry over to you without exception:
 

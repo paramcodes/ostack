@@ -7,7 +7,7 @@ not define a workflow of its own.
 
 Read `~/.config/opencode/skills/poteto-mode/SKILL.md` in full, including its inline Principles index,
 before routing. Then match the request below to a playbook, open that one playbook file, copy its
-steps into your todo list verbatim, and work them in order.
+steps into `todo.md` at the repository root verbatim, keep it gitignored, and work them in order.
 
 If the request is empty, apply the sticky behavior: confirm you are active and ask what to work on.
 If the request names a `new task`, drop any prior routing decision and start fresh.

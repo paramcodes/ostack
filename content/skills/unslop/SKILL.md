@@ -1,8 +1,9 @@
 ---
 name: unslop
 description: Cut AI tells from any writing. Must always apply.
-disable-model-invocation: true
 ---
+
+This skill is invoked only via `/unslop` or an explicit user request. Do not auto-trigger from the description alone.
 
 # Unslop
 
