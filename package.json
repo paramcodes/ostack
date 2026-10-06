@@ -1,6 +1,6 @@
 {
   "name": "@param-ship/ostack",
-  "version": "0.15.11",
+  "version": "0.15.12",
   "description": "pstack for OpenCode — rigorous agent workflows, control-cli, control-ui, deslop, subagents, and playbooks",
   "type": "module",
   "main": "./dist/index.js",
